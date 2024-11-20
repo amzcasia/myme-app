@@ -1,12 +1,12 @@
 
-import Link from 'next/link'
+// import Link from 'next/link'
 export default function Chats(){
     return(
         <div>
             <nav className="flex">
-                <Link href="../">
+                {/* <Link href="../"> */}
                     ProfPic
-                </Link>
+                {/* </Link> */}
                 <div>
                     Settings
                 </div>

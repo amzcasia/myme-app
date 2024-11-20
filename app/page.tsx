@@ -1,31 +1,19 @@
 "use client"
 import { useState } from 'react';
 import Link from 'next/link';
+import {login} from '@/utils/loginFunc2'
 
 export default function Home() {
   const [identity, setIdentity] = useState('');
   const [password, setPassword] = useState('');
 
-  const login = async (e:any) => {
-    e.preventDefault();
-    const res = await fetch('https://zgecxo.pockethost.io/api/collections/users/auth-with-password' , {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            identity,
-            password,
-        })
-      }
-    );
-    const data = await res.json();
-    const dataToTxt = JSON.stringify(data.token, null, 2)
+  const loginResponse = async (e:any) => {
+    e.preventDefault(); 
 
-    // console.log(dataToTxt)
-
+    const res = login({identity,password});
     setIdentity('');
     setPassword('');
+    return res
   }
 
   return (
@@ -34,17 +22,19 @@ export default function Home() {
         Image Here
       </div>
       <div>
-        <form className="" onSubmit={login}>
-          <div className="flex flex-col">
+        <form className="" onSubmit={loginResponse}>
+          <div className="flex flex-col text-black">
             <input 
               type="text" 
               className="" 
               value={identity}
+              name='identity'
               onChange={(e)=>setIdentity(e.target.value)}/>
             <input 
               type="password" 
               className="" 
               value={password}
+              name='password'
               onChange={(e)=>setPassword(e.target.value)}/>
           </div>
           <div>
