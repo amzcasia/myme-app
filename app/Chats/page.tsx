@@ -4,7 +4,7 @@ export default function Chats(){
     return(
         <div>
             <nav className="flex">
-                <Link href="/UserProfile">
+                <Link href="../">
                     ProfPic
                 </Link>
                 <div>
