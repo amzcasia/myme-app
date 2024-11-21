@@ -13,41 +13,30 @@ export const pb = new PocketBase('https://zgecxo.pockethost.io/');
 
 export async function pbLogin({identity, password, setIdentity, setPassword, router}:loginProps){
     // const router = useRouter();
-    let loggedIn2:boolean = true
     try{
         const authData = await pb.collection('users').authWithPassword(
             identity,
             password,
         );
-
         // after the above you can also access the auth data from the authStore
-
         // const loggedIn:boolean = pb.authStore.isValid
-        const loggedIn = pb.authStore.isValid
+        const loggedIn = pb.authStore.isValid ?? false
 
         if (loggedIn){
             router.push('/Messenger')
+            return true
         }
         else{
             // setIdentity('');
             setPassword('');
-            
+            return false
         }
-        console.log("login");
-        console.log(loggedIn);
-        console.log(pb.authStore.token);
-
-        return loggedIn
-
-        
-        // console.log(pb.authStore.model.id);
     } catch (error){
         console.error("login error", error)
+        setPassword('');
+        return false
     }
-    
-
 }
-
 
 export function pbLogout(){
     // "logout" the last authenticated account
