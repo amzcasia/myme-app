@@ -1,13 +1,13 @@
 "use server";
 
-export async function checkLogin(){
+export async function checkLogin(identity:string,password:string){
 
     const res = await fetch('https://zgecxo.pockethost.io/api/collections/users/auth-with-password' , {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: '{ "identity" : "strikefrdm23", "password" : "xCY2QDwhIp50dBQ"}',
+        body: `{ "identity" : ${identity}, "password" : ${password}}`,
         }
     );
 
