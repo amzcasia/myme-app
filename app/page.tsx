@@ -2,17 +2,23 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import {login} from '@/utils/loginFunc2'
+import { pbLogin, pbLogout } from '@/utils/functions';
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [identity, setIdentity] = useState('');
   const [password, setPassword] = useState('');
+  const [res, setRes] = useState(true)
+  const router = useRouter();
 
   const loginResponse = async (e:any) => {
     e.preventDefault(); 
-
-    const res = login({identity,password});
-    setIdentity('');
-    setPassword('');
+    // setRes(true);
+    // const res = login({identity,password});
+    const res2 = await pbLogin({identity,password,setIdentity,setPassword,router});
+    setRes(res2 ?? true);
+    // setIdentity('');
+    // setPassword('');
     return res
   }
 
@@ -38,7 +44,7 @@ export default function Home() {
               onChange={(e)=>setPassword(e.target.value)}/>
           </div>
           <div>
-            {/* <LoginButton handleClick={checkLogin} /> */}
+            {res? null : <LoginFailed />}
             <button className="" type='submit'>Login</button>                
           </div>
         </form>
@@ -50,3 +56,11 @@ export default function Home() {
     </div>
   );
 }
+
+
+function LoginFailed(){
+  return(
+  <p>
+    Login Failed
+  </p>
+)}
