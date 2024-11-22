@@ -27,8 +27,9 @@ export default function Register(){
             router
         });
 
-        if (res != ""){
-            router.push('/Messenger');
+        if (res?.username != ""){
+            // router.push(`/Messenger?username=zzzzz`);
+            router.push(`/Messenger?username=${username}`)
         }
     }
 

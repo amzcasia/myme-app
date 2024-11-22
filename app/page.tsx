@@ -15,7 +15,7 @@ export default function Home() {
     e.preventDefault(); 
     // setRes(true);
     // const res = login({identity,password});
-    const {loggedIn, userId, token} = await pbLogin({identity,password,setIdentity,setPassword,router});
+    const {loggedIn, username} = await pbLogin({identity,password,setIdentity,setPassword,router});
     setLoginStatus(loggedIn);
     // setIdentity('');
     // setPassword('');

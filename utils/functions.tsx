@@ -35,22 +35,22 @@ export async function pbLogin({identity, password, setIdentity, setPassword, rou
         const loggedIn = pb.authStore.isValid ?? false
 
         if (loggedIn){
-            const userId = pb.authStore.model? pb.authStore.model.username : ''
-            const token = pb.authStore.token
-            console.log(token)
-            console.log(pb.authStore)
-            router.push(`/Messenger?userId=${userId}`)
-            return {loggedIn,userId,token}
+            const username = pb.authStore.model? pb.authStore.model.username : ''
+            const token = pb.authStore.token;
+            console.log(token);
+            console.log(pb.authStore);
+            router.push(`/Messenger?username=${username}`);
+            return {loggedIn,username}
         }
         else{
             // setIdentity('');
             setPassword('');
-            return { loggedIn: false }
+            return { loggedIn: false, username:'' }
         }
     } catch (error:any){
-        console.error("login error", error.message)
+        console.error("login error", error.message) 
         setPassword('');
-        return { loggedIn: false }
+        return { loggedIn: false, username:'' }
     }
 }
 
@@ -108,12 +108,12 @@ export async function pbRegister(
     }catch(error){
         console.error("signup error", error)
     }
-
     if (userId != ""){
-        const identity = username
+        const identity = data.username
         const setIdentity = setUsername
-        const {loggedIn,userId,token} = await pbLogin({identity, password, setIdentity, setPassword, router})
+        const {loggedIn,username} = await pbLogin({identity, password, setIdentity, setPassword, router})
         // console.log(token)
+        return {loggedIn,username}
     }
-    return userId
+    return {loggedIn:false,username:''}
 }
