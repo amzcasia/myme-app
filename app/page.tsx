@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import {login} from '@/utils/loginFunc2'
-import { pbLogin, pbLogout } from '@/utils/functions';
+import { pbLogin, pbLogout, checkLoginStatus } from '@/utils/functions';
 import { useRouter } from "next/navigation";
 
 export default function Home() {

@@ -37,9 +37,10 @@ export async function pbLogin({identity, password, setIdentity, setPassword, rou
         if (loggedIn){
             const username = pb.authStore.model? pb.authStore.model.username : ''
             const token = pb.authStore.token;
+            console.log("login");
             console.log(token);
-            console.log(pb.authStore);
-            router.push(`/Messenger?username=${username}`);
+            // console.log(pb.authStore);
+            router.push(`/Messenger`);
             return {loggedIn,username}
         }
         else{
@@ -111,9 +112,83 @@ export async function pbRegister(
     if (userId != ""){
         const identity = data.username
         const setIdentity = setUsername
+
+
+
         const {loggedIn,username} = await pbLogin({identity, password, setIdentity, setPassword, router})
         // console.log(token)
         return {loggedIn,username}
     }
     return {loggedIn:false,username:''}
+}
+
+// export async function getContactList(){
+//     let email:string = '';
+//     if (pb.authStore.model){
+//         email = pb.authStore.model.email
+//     }
+
+//     console.log("getContactList")
+
+//     const contactList = await pb.collection('contacts').getList(1,30,{
+//         filter: `from = ${email}`,
+//     })
+//     console.log(contactList)
+//     return contactList
+// }
+
+export async function testgetContactList(){
+    const {email,id,username} = getUserInfo();
+    console.log("getContactList")
+    try{
+        const contactList = await pb.collection('contacts').getFullList({sort: '-created',});
+        console.log(contactList)
+        // return contactList
+    }catch(error){
+        console.error("failed to get contact list", error)
+    }
+    
+    
+    
+    // const contactList = ['1','2','3'];
+
+
+    // return contactList
+}
+
+export async function getContactList(){
+    const {email,id,username} = getUserInfo();
+    console.log("testgetContactList")
+    try{        
+        const data = await pb.collection('contacts').getList(1, 20, {
+            filter: `from = "${id}"`
+        });
+
+        console.log(data.items)
+        return data.items
+    }catch(error){
+        console.error("failed to get contact list", error)
+    }
+
+}
+// const [email,id,username] = getUserInfo();
+export function getUserInfo() {
+    let email = ''
+    let id = ''
+    let username = ''
+    if (pb.authStore.model){
+        email = pb.authStore.model.email
+        id = pb.authStore.model.id
+        username = pb.authStore.model.username
+    }
+    return { email, id, username }
+}
+
+export function checkLoginStatus(){
+    return pb.authStore.isValid
+}
+
+
+export async function getMessageList({fromId,toId}:any) {
+    
 }
