@@ -147,13 +147,6 @@ export async function testgetContactList(){
     }catch(error){
         console.error("failed to get contact list", error)
     }
-    
-    
-    
-    // const contactList = ['1','2','3'];
-
-
-    // return contactList
 }
 
 export async function getContactList(){
@@ -186,9 +179,24 @@ export function getUserInfo() {
 
 export function checkLoginStatus(){
     return pb.authStore.isValid
+} 
+
+type meessageListType = {
+    fromId: string,
+    toId: string
 }
 
+export async function getMessageList({fromId,toId}:meessageListType) {
+    try{
+        const data = await pb.collection('chats').getList(1, 20, {
+            filter: `(from = "${fromId}" && to = "${toId}") || (from = "${toId}" && to = "${fromId}")`,
+            sort: 'created'
+        });
+        console.log("fetching chat list")
+        console.log(data.items)
+        return data.items
+    } catch(error){
+        console.error("error fetching chats",error);
+    }
 
-export async function getMessageList({fromId,toId}:any) {
-    
 }
