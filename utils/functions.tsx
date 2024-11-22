@@ -7,7 +7,6 @@ type loginProps = {
     setIdentity: any,
     setPassword: any,
     router: any
-
 }
 
 type registerProps = {
@@ -20,7 +19,6 @@ type registerProps = {
     setPassword: any,
     setPasswordConfirm: any,
     router: any
-
 }
 
 
@@ -33,23 +31,26 @@ export async function pbLogin({identity, password, setIdentity, setPassword, rou
             identity,
             password,
         );
-        // after the above you can also access the auth data from the authStore
-        // const loggedIn:boolean = pb.authStore.isValid
+        
         const loggedIn = pb.authStore.isValid ?? false
 
         if (loggedIn){
-            router.push('/Messenger')
-            return true
+            const userId = pb.authStore.model? pb.authStore.model.username : ''
+            const token = pb.authStore.token
+            console.log(token)
+            console.log(pb.authStore)
+            router.push(`/Messenger?userId=${userId}`)
+            return {loggedIn,userId,token}
         }
         else{
             // setIdentity('');
             setPassword('');
-            return false
+            return { loggedIn: false }
         }
-    } catch (error){
-        console.error("login error", error)
+    } catch (error:any){
+        console.error("login error", error.message)
         setPassword('');
-        return false
+        return { loggedIn: false }
     }
 }
 
@@ -111,8 +112,8 @@ export async function pbRegister(
     if (userId != ""){
         const identity = username
         const setIdentity = setUsername
-        const res = await pbLogin({identity, password, setIdentity, setPassword, router})
-        console.log(res)
+        const {loggedIn,userId,token} = await pbLogin({identity, password, setIdentity, setPassword, router})
+        // console.log(token)
     }
     return userId
 }

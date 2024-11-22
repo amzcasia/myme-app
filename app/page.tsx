@@ -8,18 +8,18 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const [identity, setIdentity] = useState('');
   const [password, setPassword] = useState('');
-  const [res, setRes] = useState(true)
+  const [loginStatus, setLoginStatus] = useState(true)
   const router = useRouter();
 
   const loginResponse = async (e:any) => {
     e.preventDefault(); 
     // setRes(true);
     // const res = login({identity,password});
-    const res2 = await pbLogin({identity,password,setIdentity,setPassword,router});
-    setRes(res2 ?? true);
+    const {loggedIn, userId, token} = await pbLogin({identity,password,setIdentity,setPassword,router});
+    setLoginStatus(loggedIn);
     // setIdentity('');
     // setPassword('');
-    return res
+    // return res
   }
 
   return (
@@ -44,7 +44,7 @@ export default function Home() {
               onChange={(e)=>setPassword(e.target.value)}/>
           </div>
           <div>
-            {res? null : <LoginFailed />}
+            {!loginStatus? <LoginFailed /> : null}
             <button className="" type='submit'>Login</button>                
           </div>
         </form>

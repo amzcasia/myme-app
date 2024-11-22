@@ -5,11 +5,17 @@ import { pbLogout } from "@/utils/functions"
 import Chats from "../Chats/page"
 import Contacts from "../Contacts/page"
 
-export default function Messenger() {
+type loginProps = {
+    userId: string,
+    token: string
+}
+
+export default function Messenger({searchParams} : {searchParams : { userId? : string}}) {
+    const userId = searchParams.userId
     return (
         <div className="grid">
             <div className="flex justify-between">
-                <p>User</p>
+                <p>Hello, {userId}!</p>
                 <Link href="/"><button onClick={pbLogout}>Logout</button></Link>
             </div>
             <Contacts />
