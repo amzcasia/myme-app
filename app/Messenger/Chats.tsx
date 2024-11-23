@@ -2,11 +2,13 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { getMessageList, getUserInfo } from '@/utils/functions'
+import { getMessageList, getUserInfo, realTimeMessageList } from '@/utils/functions'
 
 type inputParamType = {
+    chatList:any,
+    setChatList:Function,
     selectedContact: string,
-    setSelectedContact: Function
+    setSelectedContact: Function,
 }
 
 type messageInputType = {
@@ -17,15 +19,16 @@ type messageInputType = {
     setAlignment: Function
 }
 
-export default function Chats( {selectedContact,setSelectedContact}: inputParamType){
-    const [chatList, setChatList] = useState<any>(null);
+export default function Chats( {chatList,setChatList,selectedContact,setSelectedContact}: inputParamType){
+    // const [chatList, setChatList] = useState<any>(null);
     const [alignment, setAlignment] = useState<string>('start');
     const {id} = getUserInfo();
     const fromId = id
+    const toId = selectedContact
 
     const handleGetChatList = async ()=>{
-        const toId = selectedContact
-        setChatList( await getMessageList({fromId,toId}))
+        setChatList( await getMessageList({fromId,toId}));
+        // realTimeMessageList({fromId,toId,setChatList});
         // const temp = (from = id) ? "start" : "end" 
         // setAlignment (temp)
 
@@ -33,8 +36,15 @@ export default function Chats( {selectedContact,setSelectedContact}: inputParamT
 
     useEffect(()=>{ 
         // temp = await getMessageList({toId,fromId})
+        console.log('start realtiime')
         handleGetChatList()
+        realTimeMessageList({fromId,toId,chatList,setChatList});
+
     },[selectedContact])
+
+    useEffect(()=>{
+        realTimeMessageList({fromId,toId,chatList,setChatList});
+    },[])
 
     return(
         <div>
@@ -46,7 +56,7 @@ export default function Chats( {selectedContact,setSelectedContact}: inputParamT
                 </div>
 
             </div>
-            <div className='border border-white grid'>
+            <div className='border border-green-500 flex flex-col'>
                 {chatList?.map((chat:any)=>{
                     return (
                     // setAlignment((from = user) ? "start" : "end")
@@ -73,9 +83,9 @@ export default function Chats( {selectedContact,setSelectedContact}: inputParamT
 }
 
 function Message({message, from, user}:messageInputType){
-    const temp = (from === user) ? "end" : "end";
+    const temp = (from === user) ? "flex-end" : "flex-start";
     return(
-        <div className={`flex justify-${temp}`}>
+        <div className='' style={{display: "flex", justifyContent: `${temp}`}}>
             {message}
         </div>
     )

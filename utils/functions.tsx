@@ -55,15 +55,11 @@ export async function pbLogin({identity, password, setIdentity, setPassword, rou
     }
 }
 
-export function pbLogout(){
-    // "logout" the last authenticated account
+export async function pbLogout(){
     console.log("logout")
+    // pb.collection('chats').unsubscribe('*');
+    const temp = await pb.realtime.unsubscribe();
     pb.authStore.clear();
-
-    // console.log(pb.authStore.isValid);
-    // console.log(pb.authStore.token);
-    // console.log(pb.authStore.model.id);
-    // router.push('/')
 }
 
 export async function pbRegister(
@@ -182,13 +178,28 @@ export function checkLoginStatus(){
 } 
 
 type meessageListType = {
-    fromId: string,
-    toId: string
+    fromId?: string,
+    toId?: string,
+    message?: string
+    from?:string,
+    to?:string,
+    chatList?:any[],
+    setChatList?:Function
+}
+
+type realtimeMessageListType = {
+    fromId?: string,
+    toId?: string,
+    message?: string
+    from?:string,
+    to?:string,
+    chatList?:any[],
+    setChatList:Function
 }
 
 export async function getMessageList({fromId,toId}:meessageListType) {
     try{
-        const data = await pb.collection('chats').getList(1, 20, {
+        const data = await pb.collection('chats').getList(1, 999, {
             filter: `(from = "${fromId}" && to = "${toId}") || (from = "${toId}" && to = "${fromId}")`,
             sort: 'created'
         });
@@ -199,4 +210,48 @@ export async function getMessageList({fromId,toId}:meessageListType) {
         console.error("error fetching chats",error);
     }
 
+}
+
+export async function sendMessage({from, to, message}:meessageListType) {
+    try{
+        const data = {
+            from,
+            to,
+            message
+        }
+        console.log("try sending message")
+        const res = await pb.collection('chats').create(data); 
+        console.log(res)
+        return res
+    }catch (error){
+        console.error("Messege send error", error)
+    }
+}
+
+
+export async function realTimeMessageList({fromId,toId,chatList,setChatList}:realtimeMessageListType){
+    let data = null
+    // const temp = await pb.realtime.unsubscribe();
+
+    await pb.collection('chats').subscribe('*', (e) => {
+        if (
+            (e.record.from === fromId && e.record.to === toId) || 
+            (e.record.from === toId && e.record.to === fromId)
+        ) {
+            if (e.record?.message){
+                setChatList((prev:any[])=>[...prev, e.record])
+            }
+
+            // setChatList( (prev: any[]) => {
+            //     if (e.record?.message) {
+            //         return [...prev, e.record];
+            //     }
+            //     return prev; // Return the current state if message is undefined
+            // });
+            
+            console.log(e.record.message);
+        }
+    });
+
+    // return 
 }
