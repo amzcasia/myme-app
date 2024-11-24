@@ -251,3 +251,55 @@ export async function realTimeMessageList({fromId,toId,chatList,setChatList}:rea
                 
     }
 }
+
+type searchIdentityType = {
+    identity: string
+}
+
+let timeout: NodeJS.Timeout;
+
+export async function searchIdentity({identity}:searchIdentityType){
+    // let data = null
+    // if (identity){
+    //     console.log("searching username/email")
+    //     try{
+    //         data = await pb.collection('users').getList(1, 50, {
+    //             filter: `username ~ "${identity}" || email ~ "${identity}"`,
+    //         });
+    //         const searchData = data.items.map((item: any) => ({
+    //             id: item.id,
+    //             username: item.username,
+    //         }));
+    //         console.log(searchData)
+    //         return searchData;
+    //     }catch (error){
+    //         console.error("search error", error);
+    //     }
+    // }
+
+    clearTimeout(timeout); // Clear the previous timeout
+
+    return new Promise((resolve, reject) => {
+        timeout = setTimeout(async () => {
+            if (identity) {
+                console.log("searching username/email");
+                try {
+                    const data = await pb.collection('users').getList(1, 50, {
+                        filter: `username ~ "${identity}" || email ~ "${identity}"`,
+                    });
+                    const searchData = data.items.map((item: any) => ({
+                        id: item.id,
+                        username: item.username,
+                    }));
+                    console.log(searchData);
+                    resolve(searchData);
+                } catch (error) {
+                    console.error("search error", error);
+                    reject(error);
+                }
+            } else {
+                resolve([]);
+            }
+        }, 500); // Delay by 500ms
+    });
+}

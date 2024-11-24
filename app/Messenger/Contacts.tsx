@@ -14,7 +14,15 @@ type inputParamType = {
     fromId: string
 }
 
-export default function Contacts({contactList, setContactList, selectedContact,setSelectedContact, chatList, setChatList, fromId}: inputParamType){
+export default function Contacts({
+        contactList, 
+        setContactList, 
+        selectedContact,
+        setSelectedContact, 
+        chatList, 
+        setChatList, 
+        fromId}: inputParamType){
+            
     const handleContactList = async () => {
         const temp = await getContactList() ?? []
         // console.log(`selected Contact: ${temp[0].to}`)
@@ -26,6 +34,10 @@ export default function Contacts({contactList, setContactList, selectedContact,s
         }
     } 
 
+    const handleNewChat = async ()=> {
+        
+    }
+
     useEffect(()=>{
         handleContactList();
     },[])
@@ -33,16 +45,22 @@ export default function Contacts({contactList, setContactList, selectedContact,s
     return(
         <div className="m-2">
             <div className="flex justify-end">
-                <button className="border px-2">Start new chat</button>
+                <button className="border px-2" onClick={()=>handleNewChat}>Start new chat</button>
             </div>
-
-            <div className="my-2 flex flex-col gap-y-2">
-                {contactList?.map((contact:any)=>{
-                    return <Contact key={contact.id} 
-                    contactId={contact.to} 
-                    contactName={contact.toUserName}
-                    setSelectedContact={setSelectedContact}/>
-                })}
+            <div className="border border-green-500 p-1">
+                <div className="flex justify-center">
+                    <p>
+                        Contact List
+                    </p>
+                </div>
+                <div className="my-2 flex flex-col gap-y-2">
+                    {contactList?.map((contact:any)=>{
+                        return <Contact key={contact.id} 
+                        contactId={contact.to} 
+                        contactName={contact.toUserName}
+                        setSelectedContact={setSelectedContact}/>
+                    })}
+                </div>
             </div>
         </div>
     )

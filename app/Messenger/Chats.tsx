@@ -28,20 +28,16 @@ export default function Chats( {chatList,setChatList,selectedContact,setSelected
 
     const handleGetChatList = async ()=>{
         setChatList( await getMessageList({fromId,toId}));
-        // realTimeMessageList({fromId,toId,setChatList});
-        // const temp = (from = id) ? "start" : "end" 
-        // setAlignment (temp)
     }
 
     useEffect(()=>{ 
-        // temp = await getMessageList({toId,fromId})
         handleGetChatList()
         realTimeMessageList({fromId,toId,chatList,setChatList});
 
     },[selectedContact])
 
     // useEffect(()=>{
-        // realTimeMessageList({fromId,toId,chatList,setChatList});
+    //     realTimeMessageList({fromId,toId,chatList,setChatList});
     // },[])
 
     return(

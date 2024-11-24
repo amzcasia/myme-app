@@ -11,13 +11,10 @@ type inputParamType = {
 export default function MessageInput({fromId, selectedContact, setChatList}: inputParamType){
     const [message, setMessage] = useState<string>('')
     const handleSendMessage = async(e:any) =>{
-        // const fromId = id
         e.preventDefault();
         const to = selectedContact;
         const from = fromId
-        const toId = selectedContact
         const msgSent = await sendMessage({from,to,message});
-        // setChatList( await getMessageList({fromId,toId}))
         setMessage('');
     }
 
