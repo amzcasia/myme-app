@@ -31,52 +31,39 @@ export default function Chats( {chatList,setChatList,selectedContact,setSelected
         // realTimeMessageList({fromId,toId,setChatList});
         // const temp = (from = id) ? "start" : "end" 
         // setAlignment (temp)
-
     }
 
     useEffect(()=>{ 
         // temp = await getMessageList({toId,fromId})
-        console.log('start realtiime')
         handleGetChatList()
         realTimeMessageList({fromId,toId,chatList,setChatList});
 
     },[selectedContact])
 
-    useEffect(()=>{
-        realTimeMessageList({fromId,toId,chatList,setChatList});
-    },[])
+    // useEffect(()=>{
+        // realTimeMessageList({fromId,toId,chatList,setChatList});
+    // },[])
 
     return(
-        <div>
+        <div className='m-2'>
             <div className='flex justify-between'>
-                <p>Chats</p>
+                
                 <p>{selectedContact}</p>
                 <div>
                     <Link href='/Messenger'>Back</Link>
                 </div>
 
             </div>
-            <div className='border border-green-500 flex flex-col'>
+            <div className='border border-green-500 flex flex-col p-1'>
                 {chatList?.map((chat:any)=>{
                     return (
-                    // setAlignment((from = user) ? "start" : "end")
                     <Message key={chat.id} 
                     message={chat.message} 
                     from={chat.from} 
                     user={fromId} 
                     alignment={alignment}
-                    setAlignment={setAlignment}
-                    />
-                )
-                })}
-
-
-                {/* {contactList?.map((contact:any)=>{
-                return <Contact key={contact.id} 
-                contactId={contact.to} 
-                contactName={contact.toUserName}
-                setSelectedContact={setSelectedContact}/>
-            })} */}
+                    setAlignment={setAlignment}/>
+                )})}
             </div>
         </div>
     );

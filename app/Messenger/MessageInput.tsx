@@ -17,14 +17,18 @@ export default function MessageInput({fromId, selectedContact, setChatList}: inp
         const from = fromId
         const toId = selectedContact
         const msgSent = await sendMessage({from,to,message});
-        setChatList( await getMessageList({fromId,toId}))
+        // setChatList( await getMessageList({fromId,toId}))
         setMessage('');
     }
 
     return(
-        <form onSubmit={handleSendMessage} className="w-full border border-white text-green flex flex-col justify-center">
-            <textarea onChange={(e)=>{setMessage(e.target.value)}} value={message} className="w-full min-h-5 bg-black" name="" id="messageInput"></textarea>
-            <button type="submit" className="p-1 rounded-md border hover:bg-green-900">Send</button>
+        <form onSubmit={handleSendMessage} className="m-2 gap-y-2 text-green flex flex-col justify-center">
+            <textarea 
+            onChange={(e)=>{setMessage(e.target.value)}} 
+            value={message} 
+            placeholder="Message"
+            className="w-full p-1 min-h-5 bg-black border border-green-500  placeholder-green-900" name="" id="messageInput"></textarea>
+            <button type="submit" className="p-1 rounded-sm border border-green-500 hover:bg-green-900">Send</button>
         </form>
     )
 }

@@ -1,51 +1,59 @@
 "use client"
 
-import { testgetContactList, getContactList } from "@/utils/functions"
+import { testgetContactList, getContactList, realTimeMessageList} from "@/utils/functions"
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
 
 type inputParamType = {
     selectedContact: string,
     setSelectedContact: Function
+    contactList: any[],
+    setContactList:Function,
+    chatList: any[],
+    setChatList: Function,
+    fromId: string
 }
 
-export default function Contacts({selectedContact,setSelectedContact}: inputParamType){
-    // const contactList = () => {await getContactList()}
-    // console.log(contactList)
-    // let contactList = [];
-    const [contactList, setContactList] = useState<any>(null);
-    
-
+export default function Contacts({contactList, setContactList, selectedContact,setSelectedContact, chatList, setChatList, fromId}: inputParamType){
     const handleContactList = async () => {
-        // const zzz = await getContactList();
-        setContactList(await getContactList())
+        const temp = await getContactList() ?? []
+        // console.log(`selected Contact: ${temp[0].to}`)
+        setContactList(temp)
+        if (temp.length > 0){
+            const temp2 = await setSelectedContact(temp[0].to)
+            const toId = selectedContact
+            realTimeMessageList({fromId,toId,chatList,setChatList});
+        }
     } 
-    
+
     useEffect(()=>{
-        console.log("contact page.tsx")
         handleContactList();
     },[])
 
     return(
-        <div className="my-2 grid justify-start">
-            {contactList?.map((contact:any)=>{
-                return <Contact key={contact.id} 
-                contactId={contact.to} 
-                contactName={contact.toUserName}
-                setSelectedContact={setSelectedContact}/>
-            })}
+        <div className="m-2">
+            <div className="flex justify-end">
+                <button className="border px-2">Start new chat</button>
+            </div>
+
+            <div className="my-2 flex flex-col gap-y-2">
+                {contactList?.map((contact:any)=>{
+                    return <Contact key={contact.id} 
+                    contactId={contact.to} 
+                    contactName={contact.toUserName}
+                    setSelectedContact={setSelectedContact}/>
+                })}
+            </div>
         </div>
     )
 }
 
 function Contact({contactId, contactName, setSelectedContact}:any){
     return(
-        <button onClick={(e)=>{setSelectedContact(contactId)}}>
+        <button className="flex" 
+        onClick={(e)=>{setSelectedContact(contactId)}}>
             <p className="">
                 {contactName}
-            </p>
-            <p>
-                {contactId}
             </p>
         </button>
     )

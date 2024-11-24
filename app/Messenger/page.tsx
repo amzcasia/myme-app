@@ -13,6 +13,7 @@ export default function Messenger() {
     const {email,id,username} = getUserInfo();
     const [selectedContact, setSelectedContact] = useState<any>('null');
     const [chatList, setChatList] = useState<any>(null);
+    const [contactList, setContactList] = useState<any>(null);
 
     // const userId = userParams
     return (
@@ -25,7 +26,10 @@ export default function Messenger() {
                     <button onClick={pbLogout}>Logout</button>
                 </Link>
             </div>
-            <Contacts selectedContact={selectedContact} 
+            <Contacts 
+                contactList={contactList}
+                setContactList = {setContactList}
+                selectedContact={selectedContact} 
                 setSelectedContact={setSelectedContact}>
             </Contacts>
             <Chats

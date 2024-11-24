@@ -29,23 +29,25 @@ export default function Home() {
       </div>
       <div>
         <form className="" onSubmit={loginResponse}>
-          <div className="flex flex-col text-black">
+          <div className="flex flex-col text-black gap-y-1 px-2">
             <input 
               type="text" 
               className="" 
               value={identity}
               name='identity'
+              placeholder='username'
               onChange={(e)=>setIdentity(e.target.value)}/>
             <input 
               type="password" 
               className="" 
               value={password}
               name='password'
+              placeholder='password'
               onChange={(e)=>setPassword(e.target.value)}/>
           </div>
-          <div>
+          <div className='flex justify-center my-4'>
             {!loginStatus? <LoginFailed /> : null}
-            <button className="" type='submit'>Login</button>                
+            <button className="py-2 px-4 hover:bg-green-800 border border-green-500 rounded-md" type='submit'>Login</button>                
           </div>
         </form>
         <div>

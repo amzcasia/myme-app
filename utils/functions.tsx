@@ -230,28 +230,24 @@ export async function sendMessage({from, to, message}:meessageListType) {
 
 
 export async function realTimeMessageList({fromId,toId,chatList,setChatList}:realtimeMessageListType){
-    let data = null
-    // const temp = await pb.realtime.unsubscribe();
+    if (fromId && toId){
+        console.log('start realtiime')
+        console.log(`From: ${fromId}`)
+        console.log(`To: ${toId}`)
+        
+        pb.collection('chats').unsubscribe('*');
 
-    await pb.collection('chats').subscribe('*', (e) => {
-        if (
-            (e.record.from === fromId && e.record.to === toId) || 
-            (e.record.from === toId && e.record.to === fromId)
-        ) {
-            if (e.record?.message){
-                setChatList((prev:any[])=>[...prev, e.record])
+        await pb.collection('chats').subscribe('*', (e) => {
+            if (
+                (e.record.from === fromId && e.record.to === toId) || 
+                (e.record.from === toId && e.record.to === fromId)
+            ) {
+                if (e.record?.message){
+                    setChatList((prev:any[])=>[...prev, e.record])
+                }
+                console.log(e.record.message);
             }
-
-            // setChatList( (prev: any[]) => {
-            //     if (e.record?.message) {
-            //         return [...prev, e.record];
-            //     }
-            //     return prev; // Return the current state if message is undefined
-            // });
-            
-            console.log(e.record.message);
-        }
-    });
-
-    // return 
+                });
+                
+    }
 }
