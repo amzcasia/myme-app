@@ -1,6 +1,6 @@
 "use client"
 
-import { testgetContactList, getContactList} from "@/utils/functions"
+import { deleteContact, getContactList } from "@/utils/functions"
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
 
@@ -22,41 +22,37 @@ export default function Contacts({
         chatList, 
         setChatList, 
         fromId}: inputParamType){
-            
-    const handleContactList = async () => {
-        const temp = await getContactList() ?? []
-        // console.log(`selected Contact: ${temp[0].to}`)
-        setContactList(temp)
-        if (temp.length > 0){
-            const temp2 = await setSelectedContact(temp[0].to)
-            const toId = selectedContact
-        }
-    } 
-
-    const handleNewChat = async ()=> {
         
-    }
-
     useEffect(()=>{
+        const handleContactList = async () => {
+            const temp = await getContactList() ?? []
+
+            setContactList(temp)
+            if (temp.length > 0){
+                const temp2 = await setSelectedContact(temp[0].to)
+                const toId = selectedContact
+            }
+        }
         handleContactList();
-    },[])
+    },[selectedContact])
+// },[])
 
     return(
         <div className="m-2">
-            <div className="flex justify-end">
+            {/* <div className="flex justify-end">
                 <button className="border px-2" onClick={()=>handleNewChat}>Start new chat</button>
-            </div>
+            </div> */}
             <div className="border border-green-500 p-1">
-                <div className="flex justify-center">
+                <div className="flex justify-center pt-1">
                     <p>
                         Contact List
                     </p>
                 </div>
-                <div className="my-2 flex flex-col gap-y-2">
+                <div className="flex flex-col">
                     {contactList?.map((contact:any)=>{
                         return <Contact key={contact.id} 
                         contactId={contact.to} 
-                        contactName={contact.toUserName}
+                        contactName={contact.toUsername}
                         setSelectedContact={setSelectedContact}/>
                     })}
                 </div>
@@ -66,13 +62,17 @@ export default function Contacts({
 }
 
 function Contact({contactId, contactName, setSelectedContact}:any){
+    const toId = contactId
     return(
-        <button className="flex" 
-        onClick={(e)=>{setSelectedContact(contactId)}}>
-            <p className="">
+        <div className="flex justify-between p-1 group">
+            <p className="hover:cursor-pointer hover:bg-green-900 px-1"
+            onClick={(e)=>{setSelectedContact(contactId)}}>
                 {contactName}
             </p>
-        </button>
+            <button className="hidden group-hover:flex font-semibold px-2 hover:bg-green-900"
+            onClick={()=>{deleteContact({toId})}}>
+                x</button>
+        </div>
     )
 }
 

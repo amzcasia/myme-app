@@ -1,3 +1,4 @@
+import { userInfo } from 'os';
 import PocketBase from 'pocketbase';
 // import { useRouter } from "next/navigation";
 
@@ -108,9 +109,6 @@ export async function pbRegister(
     if (userId != ""){
         const identity = data.username
         const setIdentity = setUsername
-
-
-
         const {loggedIn,username} = await pbLogin({identity, password, setIdentity, setPassword, router})
         // console.log(token)
         return {loggedIn,username}
@@ -125,14 +123,66 @@ export async function getContactList(){
         const data = await pb.collection('contacts').getList(1, 20, {
             filter: `from = "${id}"`
         });
-
+        console.log("Contact List:")
         console.log(data.items)
         return data.items
     }catch(error){
         console.error("failed to get contact list", error)
     }
-
 }
+
+type addNewContactType = {
+    fromId: string,
+    toId: string, 
+    toUsername: string,
+    contactList:any[],
+    setContactList:Function,
+    setSelectedContact: Function
+}
+
+export async function addNewContact({fromId, toId, toUsername, contactList, setContactList, setSelectedContact}:addNewContactType) {
+    console.log('addNewContact')
+    console.log(`From: ${fromId}`)
+    console.log(`To: ${toId}`)
+    console.log(`ToUsername: ${toUsername}`)
+
+    console.log("Contact List:")
+    console.log(contactList)
+
+
+    const toUsernameList = contactList.map((contact)=>(contact.toUsername))
+
+    if(!toUsernameList.includes(toUsername)){
+        console.log(`${toUsername} is not in Contact List. Adding now...`)
+        const contactData = {
+            "from": `${fromId}`,
+            "to": `${toId}`,
+            "toUsername": `${toUsername}`
+        };
+        try{
+            const record = await pb.collection('contacts').create(contactData);
+            console.log("response after adding new contact:")
+            console.log(record)
+            const contactDataWithId = {
+                "id":`${record.id}`,
+                "from": `${fromId}`,
+                "to": `${toId}`,
+                "toUsername": `${toUsername}`
+            }; 
+            setContactList((prev:any)=>[...prev,contactDataWithId])
+            setSelectedContact(toId)
+            // return record.id
+        }catch(error){
+            console.error("error adding new contact: functions.tsx/addNewContact", error);
+        }
+
+    }else{
+        console.log(`${toUsername} is already in Contact List. Now jumping to chat`);
+        setSelectedContact(toId);
+
+    }
+}
+
 // const [email,id,username] = getUserInfo();
 export function getUserInfo() {
     let email = ''
@@ -226,39 +276,21 @@ export async function realTimeMessageList({fromId,toId,chatList,setChatList}:rea
 }
 
 type searchIdentityType = {
-    identity: string
+    searchUsername: string
 }
 
 let timeout: NodeJS.Timeout;
 
-export async function searchIdentity({identity}:searchIdentityType){
-    // let data = null
-    // if (identity){
-    //     console.log("searching username/email")
-    //     try{
-    //         data = await pb.collection('users').getList(1, 50, {
-    //             filter: `username ~ "${identity}" || email ~ "${identity}"`,
-    //         });
-    //         const searchData = data.items.map((item: any) => ({
-    //             id: item.id,
-    //             username: item.username,
-    //         }));
-    //         console.log(searchData)
-    //         return searchData;
-    //     }catch (error){
-    //         console.error("search error", error);
-    //     }
-    // }
-
+export async function searchContactUsername({searchUsername}:searchIdentityType){
     clearTimeout(timeout); // Clear the previous timeout
 
     return new Promise((resolve, reject) => {
         timeout = setTimeout(async () => {
-            if (identity) {
+            if (searchUsername) {
                 console.log("searching username/email");
                 try {
                     const data = await pb.collection('users').getList(1, 50, {
-                        filter: `username ~ "${identity}" || email ~ "${identity}"`,
+                        filter: `username ~ "${searchUsername}" || email ~ "${searchUsername}"`,
                     });
                     const searchData = data.items.map((item: any) => ({
                         id: item.id,
@@ -275,4 +307,14 @@ export async function searchIdentity({identity}:searchIdentityType){
             }
         }, 500); // Delay by 500ms
     });
+}
+
+type deleteContactType = {
+    toId: string
+}
+
+export async function deleteContact({toId}:deleteContactType) {
+    //delete all messeges with toId ={toId}
+    //delete contact from contactList
+    alert('Delete contact is still under development');
 }

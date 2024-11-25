@@ -15,25 +15,27 @@ export default function Messenger() {
     const [selectedContact, setSelectedContact] = useState<any>('null');
     const [chatList, setChatList] = useState<any>(null);
     const [contactList, setContactList] = useState<any>(null);
-
+    // const [toId, setToId] = useState<string>('');
 
     const fromId = id;
-    const toId = selectedContact
-
-    const handleGetChatList = async ()=>{
-        setChatList( await getMessageList({fromId,toId}));
-    }
-
+    
     useEffect(()=>{ 
-        handleGetChatList()
-        realTimeMessageList({fromId,toId,chatList,setChatList});
-
+        let toId = selectedContact
+        console.log('/Messenger/page.tsx/useEffect/toId')
+        console.log(toId)
+        console.log("ChatList")
+        console.log(chatList)
+        const fetchData = async () => {
+            setChatList( await getMessageList({fromId,toId}));
+            realTimeMessageList({fromId,toId,chatList,setChatList});
+        };
+        fetchData();
     },[selectedContact])
 
     // const userId = userParams
     return (
         <div className="grid">
-            <div className="flex justify-between">
+            <div className="flex justify-between px-2 pt-2">
                 <div>
                     <p>{username}</p>
                 </div>

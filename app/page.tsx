@@ -23,23 +23,23 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <div>
-        Image Here
+    <div className='m-2'>
+      <div className='p-2'>
+        Messenger
       </div>
       <div>
         <form className="" onSubmit={loginResponse}>
-          <div className="flex flex-col text-black gap-y-1 px-2">
+          <div className="flex flex-col  gap-y-2 px-2">
             <input 
               type="text" 
-              className="" 
+              className="bg-black border border-green-500 p-1 placeholder:text-green-800" 
               value={identity}
               name='identity'
               placeholder='username'
               onChange={(e)=>setIdentity(e.target.value)}/>
             <input 
               type="password" 
-              className="" 
+              className="bg-black border border-green-500 p-1 placeholder:text-green-800" 
               value={password}
               name='password'
               placeholder='password'

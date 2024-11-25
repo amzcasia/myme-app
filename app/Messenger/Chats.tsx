@@ -32,7 +32,8 @@ export default function Chats( {chatList,setChatList,selectedContact,setSelected
                 
                 <p>{selectedContact}</p>
                 <div>
-                    <Link href='/Messenger'>Back</Link>
+                    {/* <Link href='/Messenger'>Back</Link> */}
+                    <p>Chat Area</p>
                 </div>
 
             </div>
