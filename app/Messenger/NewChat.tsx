@@ -39,15 +39,17 @@ export default function NewChat({
 
     return(
         <div className="p-2">
-            <p>
-                Input username or email
-            </p>
-            <div>
-                <input  type="text" placeholder="username/email"
-                onChange={(e)=>{setIdentity(e.target.value)}}
-                value={identity} 
-                className="bg-black border px-1 border-green-500"/>
-                <button></button>
+            <div className="flex gap-x-2">
+                <p>
+                    Search user
+                </p>
+                <div>
+                    <input  type="text" placeholder="username/email"
+                    onChange={(e)=>{setIdentity(e.target.value)}}
+                    value={identity} 
+                    className="bg-black border px-1 border-green-500 placeholder:text-green-800"/>
+                    <button></button>
+                </div>
             </div>
             <div>
                 <p>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { getMessageList, getUserInfo, realTimeMessageList } from '@/utils/functions'
+import { getMessageList, getUserInfo} from '@/utils/functions'
 
 type inputParamType = {
     chatList:any,
@@ -25,20 +25,6 @@ export default function Chats( {chatList,setChatList,selectedContact,setSelected
     const {id} = getUserInfo();
     const fromId = id
     const toId = selectedContact
-
-    const handleGetChatList = async ()=>{
-        setChatList( await getMessageList({fromId,toId}));
-    }
-
-    useEffect(()=>{ 
-        handleGetChatList()
-        realTimeMessageList({fromId,toId,chatList,setChatList});
-
-    },[selectedContact])
-
-    // useEffect(()=>{
-    //     realTimeMessageList({fromId,toId,chatList,setChatList});
-    // },[])
 
     return(
         <div className='m-2'>

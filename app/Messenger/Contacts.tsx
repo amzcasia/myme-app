@@ -1,6 +1,6 @@
 "use client"
 
-import { testgetContactList, getContactList, realTimeMessageList} from "@/utils/functions"
+import { testgetContactList, getContactList} from "@/utils/functions"
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
 
@@ -30,7 +30,6 @@ export default function Contacts({
         if (temp.length > 0){
             const temp2 = await setSelectedContact(temp[0].to)
             const toId = selectedContact
-            realTimeMessageList({fromId,toId,chatList,setChatList});
         }
     } 
 

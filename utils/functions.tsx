@@ -118,36 +118,9 @@ export async function pbRegister(
     return {loggedIn:false,username:''}
 }
 
-// export async function getContactList(){
-//     let email:string = '';
-//     if (pb.authStore.model){
-//         email = pb.authStore.model.email
-//     }
-
-//     console.log("getContactList")
-
-//     const contactList = await pb.collection('contacts').getList(1,30,{
-//         filter: `from = ${email}`,
-//     })
-//     console.log(contactList)
-//     return contactList
-// }
-
-export async function testgetContactList(){
-    const {email,id,username} = getUserInfo();
-    console.log("getContactList")
-    try{
-        const contactList = await pb.collection('contacts').getFullList({sort: '-created',});
-        console.log(contactList)
-        // return contactList
-    }catch(error){
-        console.error("failed to get contact list", error)
-    }
-}
-
 export async function getContactList(){
     const {email,id,username} = getUserInfo();
-    console.log("testgetContactList")
+    console.log("getContactList")
     try{        
         const data = await pb.collection('contacts').getList(1, 20, {
             filter: `from = "${id}"`
@@ -198,18 +171,19 @@ type realtimeMessageListType = {
 }
 
 export async function getMessageList({fromId,toId}:meessageListType) {
-    try{
-        const data = await pb.collection('chats').getList(1, 999, {
-            filter: `(from = "${fromId}" && to = "${toId}") || (from = "${toId}" && to = "${fromId}")`,
-            sort: 'created'
-        });
-        console.log("fetching chat list")
-        console.log(data.items)
-        return data.items
-    } catch(error){
-        console.error("error fetching chats",error);
+    if (toId !== null && toId !== 'null'){
+        try{
+            const data = await pb.collection('chats').getList(1, 999, {
+                filter: `(from = "${fromId}" && to = "${toId}") || (from = "${toId}" && to = "${fromId}")`,
+                sort: 'created'
+            });
+            console.log("fetching chat list")
+            console.log(data.items)
+            return data.items
+        } catch(error){
+            console.error("error fetching chats",error);
+        }
     }
-
 }
 
 export async function sendMessage({from, to, message}:meessageListType) {
@@ -230,13 +204,12 @@ export async function sendMessage({from, to, message}:meessageListType) {
 
 
 export async function realTimeMessageList({fromId,toId,chatList,setChatList}:realtimeMessageListType){
-    if (fromId && toId){
+    if (toId !== 'null'){
         console.log('start realtiime')
         console.log(`From: ${fromId}`)
         console.log(`To: ${toId}`)
         
-        pb.collection('chats').unsubscribe('*');
-
+        await pb.collection('chats').unsubscribe('*');
         await pb.collection('chats').subscribe('*', (e) => {
             if (
                 (e.record.from === fromId && e.record.to === toId) || 
