@@ -310,11 +310,28 @@ export async function searchContactUsername({searchUsername}:searchIdentityType)
 }
 
 type deleteContactType = {
+    fromId:string,
     toId: string
 }
 
-export async function deleteContact({toId}:deleteContactType) {
+export async function deleteContact({fromId,toId}:deleteContactType) {
     //delete all messeges with toId ={toId}
     //delete contact from contactList
+    const toDelete = await pb.collection('contacts').getList(1, 50, {
+        filter: `from = "${fromId}" && to = "${toId}"`,
+      });
+
     alert('Delete contact is still under development');
+    try{
+        // await pb.collection('contacts').delete('RECORD_ID');
+        console.log("test delete")
+        console.log(toDelete.items[0].id)
+
+        // for (const record of toDelete.items) {
+        //     await pb.collection('contacts').delete(record.id);
+        //   }
+
+    }catch(error){
+        console.error('function.tsx/deleteContact: Error deleting contact/chat',error)
+    }
 }

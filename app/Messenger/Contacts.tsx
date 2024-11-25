@@ -51,6 +51,7 @@ export default function Contacts({
                 <div className="flex flex-col">
                     {contactList?.map((contact:any)=>{
                         return <Contact key={contact.id} 
+                        fromId={contact.from}
                         contactId={contact.to} 
                         contactName={contact.toUsername}
                         setSelectedContact={setSelectedContact}/>
@@ -61,7 +62,7 @@ export default function Contacts({
     )
 }
 
-function Contact({contactId, contactName, setSelectedContact}:any){
+function Contact({fromId,contactId, contactName, setSelectedContact}:any){
     const toId = contactId
     return(
         <div className="flex justify-between p-1 group">
@@ -69,8 +70,8 @@ function Contact({contactId, contactName, setSelectedContact}:any){
             onClick={(e)=>{setSelectedContact(contactId)}}>
                 {contactName}
             </p>
-            <button className="hidden group-hover:flex font-semibold px-2 hover:bg-green-900"
-            onClick={()=>{deleteContact({toId})}}>
+            <button className="hidden rounded-md group-hover:flex font-semibold px-2 hover:bg-green-900 hover:text-green-100"
+            onClick={()=>{deleteContact({fromId,toId})}}>
                 x</button>
         </div>
     )
