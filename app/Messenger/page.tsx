@@ -37,56 +37,60 @@ export default function Messenger() {
 
     // const userId = userParams
     return (
-        <div className="grid">
-            <div className="flex justify-between px-2 pt-2">
-                <div>
-                    <p>{username}</p>
+        <div className="flex justify-center">
+            <div className="grid min-w-[60vw] w-full grid-cols-1 md:grid-cols-3 md:max-w-[90vw] lg:max-w-[70vw] border border-green-500">
+                <div className="md:h-full col-span-1">
+                    <div className="flex justify-between px-2 pt-2">
+                        <div>
+                            <p>{username}</p>
+                        </div>
+                        <Link href="/">
+                            <button onClick={pbLogout}>Logout</button>
+                        </Link>
+                    </div>
+                    <div>
+                        <NewChat contactList={contactList}
+                            setContactList = {setContactList}
+                            selectedContact={selectedContact} 
+                            setSelectedContact={setSelectedContact}
+                            chatList={chatList}
+                            setChatList={setChatList}
+                            fromId={id}
+                            fromUsername={username}>
+                            
+                        </NewChat>
+                        <Contacts 
+                            contactList={contactList}
+                            setContactList = {setContactList}
+                            selectedContact={selectedContact} 
+                            setSelectedContact={setSelectedContact}
+                            chatList={chatList}
+                            setChatList={setChatList}
+                            fromId={id}
+                            selectedContactUsername={selectedContactUsername}
+                            setSelectedContactUsername={setSelectedContactUsername} >
+                        </Contacts>
+                    </div>
                 </div>
-                <Link href="/">
-                    <button onClick={pbLogout}>Logout</button>
-                </Link>
-            </div>
-            <NewChat contactList={contactList}
-                setContactList = {setContactList}
-                selectedContact={selectedContact} 
-                setSelectedContact={setSelectedContact}
-                chatList={chatList}
-                setChatList={setChatList}
-                fromId={id}
-                fromUsername={username}>
                 
-            </NewChat>
-            <Contacts 
-                contactList={contactList}
-                setContactList = {setContactList}
-                selectedContact={selectedContact} 
-                setSelectedContact={setSelectedContact}
-                chatList={chatList}
-                setChatList={setChatList}
-                fromId={id}
-                selectedContactUsername={selectedContactUsername}
-                setSelectedContactUsername={setSelectedContactUsername} >
-            </Contacts>
-            
-            <div>
-                {selectedContactUsername &&
-                <>
-                    <Chats
-                        chatList={chatList}
-                        setChatList = {setChatList}
-                        selectedContact={selectedContact} 
-                        setSelectedContact={setSelectedContact}
-                        selectedContactUsername={selectedContactUsername}>
-                    </Chats>
-                    <MessageInput 
-                        fromId={id}
-                        selectedContact={selectedContact}
-                        setChatList={setChatList} >
-                    </MessageInput>
-                </>}
+                <div className="col-span-2">
+                    {selectedContactUsername &&
+                    <>
+                        <Chats
+                            chatList={chatList}
+                            setChatList = {setChatList}
+                            selectedContact={selectedContact} 
+                            setSelectedContact={setSelectedContact}
+                            selectedContactUsername={selectedContactUsername}>
+                        </Chats>
+                        <MessageInput 
+                            fromId={id}
+                            selectedContact={selectedContact}
+                            setChatList={setChatList} >
+                        </MessageInput>
+                    </>}
+                </div>
             </div>
-            
-
         </div>
     )
 }
