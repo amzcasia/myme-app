@@ -5,10 +5,11 @@ import { sendMessage } from "@/utils/functions"
 type inputParamType = {
     selectedContact: string,
     fromId: string,
-    setChatList: Function
+    setChatList: Function,
+    scrollToBottom: Function
 }
 
-export default function MessageInput({fromId, selectedContact}: inputParamType){
+export default function MessageInput({fromId, selectedContact, scrollToBottom}: inputParamType){
     const [message, setMessage] = useState<string>('')
     const handleSendMessage = async(e:any) =>{
         e.preventDefault();
@@ -19,14 +20,18 @@ export default function MessageInput({fromId, selectedContact}: inputParamType){
     }
 
     return(
-        <form onSubmit={handleSendMessage} className="m-2 gap-y-2 text-green flex flex-col justify-center">
-            <div className="flex flex-col md:flex-row">
-                <textarea 
-                onChange={(e)=>{setMessage(e.target.value)}} 
-                value={message} 
-                placeholder="Message"
-                className="w-full p-1 min-h-5 bg-black border border-green-500  placeholder-green-900" name="" id="messageInput"></textarea>
-                <button type="submit" className="md:min-w-20 w-full p-1 rounded-sm border border-green-500 hover:bg-green-900">Send</button>
+        <form onSubmit={handleSendMessage} className="m-2 text-green sticky bottom-0 bg-black">
+            <div className="flex flex-col md:flex-row gap-y-1 md:gap-x-2">
+                <div className="w-full">
+                    <textarea 
+                    onChange={(e)=>{setMessage(e.target.value)}} 
+                    value={message} 
+                    placeholder="Message"
+                    className="w-full h-full resize-none p-1 bg-black border border-green-500  placeholder-green-900" name="" id="messageInput"></textarea>
+                </div>
+                <div className="md:min-w-32 border-green-500 border hover:bg-green-900 flex ">
+                    <button onClick={()=>{scrollToBottom()}} type="submit" className="rounded-sm w-full p-2">Send</button>
+                </div>
             </div>
         </form>
     )

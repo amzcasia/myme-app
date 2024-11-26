@@ -38,15 +38,15 @@ export default function NewChat({
 
     return(
         <div className="p-2">
-            <div className="flex gap-x-2">
-                <p>
-                    Search user
-                </p>
-                <div>
+            <div className="grid grid-cols-3">
+                <div className="w-full">
+                    <p>Search user</p>
+                </div>
+                <div className="w-full col-span-2">
                     <input  type="text" placeholder="username/email"
                     onChange={(e)=>{setSearchUsername(e.target.value)}}
                     value={searchUsername} 
-                    className="bg-black border px-1 border-green-500 placeholder:text-green-800"/>
+                    className="bg-black w-full border px-1 border-green-500 placeholder:text-green-800"/>
                     <button></button>
                 </div>
             </div>
