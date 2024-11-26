@@ -1,8 +1,7 @@
 "use client"
 
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { getMessageList, getUserInfo} from '@/utils/functions'
+import { useState } from 'react'
+import { getUserInfo} from '@/utils/functions'
 
 type inputParamType = {
     chatList:any,
