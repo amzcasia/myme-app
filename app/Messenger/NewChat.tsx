@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { getContactList, searchContactUsername, addNewContact } from "@/utils/functions";
+import { searchContactUsername, addNewContact } from "@/utils/functions";
 
 type inputParamType = {
     selectedContact: string,
@@ -18,33 +18,22 @@ type inputParamType = {
 export default function NewChat({
         contactList, 
         setContactList, 
-        selectedContact,
         setSelectedContact, 
-        chatList, 
-        setChatList, 
         fromId,
         fromUsername}: inputParamType){
 
     // const [identity, setIdentity] = useState('');
     const [searchUsername, setSearchUsername] = useState('');
     const [searchOutputList, setSearchOutputList] = useState<any>([]);
+    
     const [showSearch, setShowSearch] = useState<string>('hidden');
 
-    async function handleSearch(){
-        // e.preventDefault()
-        // const identiy = e.target.value
-        // setIdentity(identity)
-        setSearchOutputList(await searchContactUsername({searchUsername}))
-    }
-
     useEffect(()=>{
-        handleSearch()
-        // if(searchUsername !== ''){
-        //     setShowSearch('flex')
-        // }else{
-        //     setShowSearch('none')
-        // }
-        setShowSearch( searchUsername? 'flex' : 'none')
+        const fetchResults = async()=> {
+            setSearchOutputList(await searchContactUsername({searchUsername}))
+        }
+        fetchResults();
+        setShowSearch( searchUsername? 'flex' : 'none');
     },[searchUsername])
 
     return(

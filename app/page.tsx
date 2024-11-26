@@ -1,8 +1,7 @@
 "use client"
 import { useState } from 'react';
 import Link from 'next/link';
-import {login} from '@/utils/loginFunc2'
-import { pbLogin, pbLogout, checkLoginStatus } from '@/utils/functions';
+import { pbLogin } from '@/utils/functions';
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -15,7 +14,7 @@ export default function Home() {
     e.preventDefault(); 
     // setRes(true);
     // const res = login({identity,password});
-    const {loggedIn, username} = await pbLogin({identity,password,setIdentity,setPassword,router});
+    const {loggedIn} = await pbLogin({identity,password,setIdentity,setPassword,router});
     setLoginStatus(loggedIn);
     // setIdentity('');
     // setPassword('');
@@ -51,14 +50,13 @@ export default function Home() {
           </div>
         </form>
         <div>
-          <p>Don't have an account?</p>
+          <p>{"Don't have an account?"}</p>
           <Link href="/Register">Sign Up</Link>
         </div>
       </div>
     </div>
   );
 }
-
 
 function LoginFailed(){
   return(

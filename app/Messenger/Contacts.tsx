@@ -1,8 +1,6 @@
 "use client"
 
-import { deleteContact, getContactList } from "@/utils/functions"
-import { useState, useEffect, use } from "react";
-import Link from "next/link";
+import { deleteContact } from "@/utils/functions"
 
 type inputParamType = {
     selectedContact: string,
@@ -18,13 +16,7 @@ type inputParamType = {
 
 export default function Contacts({
         contactList, 
-        setContactList, 
-        selectedContact,
         setSelectedContact, 
-        chatList, 
-        setChatList, 
-        fromId,
-        selectedContactUsername,
         setSelectedContactUsername}: inputParamType){
         
     // useEffect(()=>{
@@ -79,7 +71,7 @@ function Contact({fromId,contactId, contactName, setSelectedContact, setSelected
     return(
         <div className="flex justify-between p-1 group">
             <p className="hover:cursor-pointer hover:bg-green-900 px-1"
-            onClick={(e)=>{handleSelectContact()}}>
+            onClick={()=>{handleSelectContact()}}>
                 {contactName}
             </p>
             <button className="hidden rounded-md group-hover:flex font-semibold px-2 hover:bg-green-900 hover:text-green-100"

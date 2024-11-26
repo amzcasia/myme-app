@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { sendMessage, getMessageList } from "@/utils/functions"
+import { sendMessage } from "@/utils/functions"
 
 type inputParamType = {
     selectedContact: string,
@@ -8,13 +8,13 @@ type inputParamType = {
     setChatList: Function
 }
 
-export default function MessageInput({fromId, selectedContact, setChatList}: inputParamType){
+export default function MessageInput({fromId, selectedContact}: inputParamType){
     const [message, setMessage] = useState<string>('')
     const handleSendMessage = async(e:any) =>{
         e.preventDefault();
         const to = selectedContact;
         const from = fromId
-        const msgSent = await sendMessage({from,to,message});
+        await sendMessage({from,to,message});
         setMessage('');
     }
 

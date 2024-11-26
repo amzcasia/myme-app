@@ -19,12 +19,13 @@ type messageInputType = {
     setAlignment: Function
 }
 
-export default function Chats( {chatList,setChatList,selectedContact,selectedContactUsername,setSelectedContact}: inputParamType){
+// export default function Chats( {chatList,setChatList,selectedContact,selectedContactUsername,setSelectedContact}: inputParamType){
+    export default function Chats( {chatList,selectedContactUsername}: inputParamType){
+
     // const [chatList, setChatList] = useState<any>(null);
     const [alignment, setAlignment] = useState<string>('start');
     const {id} = getUserInfo();
     const fromId = id
-    const toId = selectedContact
     // const [selectedContactUsername, setSelectedContactUsername] = useState<string>('')
 
     return(

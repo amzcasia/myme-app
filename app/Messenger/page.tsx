@@ -11,7 +11,7 @@ import NewChat from "./NewChat"
 
 // export default function Messenger({searchParams} : any) {
 export default function Messenger() {
-    const {email,id,username} = getUserInfo();
+    const {id,username} = getUserInfo();
     const [selectedContact, setSelectedContact] = useState<any>('null');
     const [chatList, setChatList] = useState<any>(null);
     const [contactList, setContactList] = useState<any>(null);
@@ -22,14 +22,13 @@ export default function Messenger() {
     const fromId = id;
     
     useEffect(()=>{ 
-        let toId = selectedContact
+        const toId = selectedContact
         console.log('/Messenger/page.tsx/useEffect/toId')
         console.log(toId)
         console.log("ChatList")
         console.log(chatList)
         const fetchData = async () => {
-            const temp = await getContactList() ?? []
-            setContactList(temp)
+            setContactList(await getContactList() ?? [])
             setChatList( await getMessageList({fromId,toId}));
             realTimeMessageList({fromId,toId,chatList,setChatList});
         };
