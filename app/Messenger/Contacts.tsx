@@ -11,7 +11,9 @@ type inputParamType = {
     setContactList:Function,
     chatList: any[],
     setChatList: Function,
-    fromId: string
+    fromId: string,
+    selectedContactUsername:string,
+    setSelectedContactUsername: Function
 }
 
 export default function Contacts({
@@ -21,20 +23,22 @@ export default function Contacts({
         setSelectedContact, 
         chatList, 
         setChatList, 
-        fromId}: inputParamType){
+        fromId,
+        selectedContactUsername,
+        setSelectedContactUsername}: inputParamType){
         
-    useEffect(()=>{
-        const handleContactList = async () => {
-            const temp = await getContactList() ?? []
+    // useEffect(()=>{
+    //     const handleContactList = async () => {
+    //         const temp = await getContactList() ?? []
 
-            setContactList(temp)
-            if (temp.length > 0){
-                const temp2 = await setSelectedContact(temp[0].to)
-                const toId = selectedContact
-            }
-        }
-        handleContactList();
-    },[selectedContact])
+    //         setContactList(temp)
+    //         // if (temp.length > 0){
+    //         //     const temp2 = await setSelectedContact(temp[0].to)
+    //         //     const toId = selectedContact
+    //         // }
+    //     }
+    //     handleContactList();
+    // },[selectedContact])
 // },[])
 
     return(
@@ -54,7 +58,9 @@ export default function Contacts({
                         fromId={contact.from}
                         contactId={contact.to} 
                         contactName={contact.toUsername}
-                        setSelectedContact={setSelectedContact}/>
+                        setSelectedContact={setSelectedContact}
+                        setSelectedContactUsername={setSelectedContactUsername}
+                        />
                     })}
                 </div>
             </div>
@@ -62,16 +68,22 @@ export default function Contacts({
     )
 }
 
-function Contact({fromId,contactId, contactName, setSelectedContact}:any){
+function Contact({fromId,contactId, contactName, setSelectedContact, setSelectedContactUsername}:any){
     const toId = contactId
+
+    const handleSelectContact =  async () => {
+        setSelectedContactUsername(contactName);
+        setSelectedContact(contactId);
+    }
+
     return(
         <div className="flex justify-between p-1 group">
             <p className="hover:cursor-pointer hover:bg-green-900 px-1"
-            onClick={(e)=>{setSelectedContact(contactId)}}>
+            onClick={(e)=>{handleSelectContact()}}>
                 {contactName}
             </p>
             <button className="hidden rounded-md group-hover:flex font-semibold px-2 hover:bg-green-900 hover:text-green-100"
-            onClick={()=>{deleteContact({fromId,toId})}}>
+            onClick={()=>{deleteContact({fromId,toId,setSelectedContact,setSelectedContactUsername})}}>
                 x</button>
         </div>
     )

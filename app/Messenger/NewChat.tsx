@@ -10,7 +10,8 @@ type inputParamType = {
     setContactList:Function,
     chatList: any[],
     setChatList: Function,
-    fromId: string
+    fromId: string,
+    fromUsername:string
 }
 
 
@@ -21,7 +22,8 @@ export default function NewChat({
         setSelectedContact, 
         chatList, 
         setChatList, 
-        fromId}: inputParamType){
+        fromId,
+        fromUsername}: inputParamType){
 
     // const [identity, setIdentity] = useState('');
     const [searchUsername, setSearchUsername] = useState('');
@@ -64,16 +66,18 @@ export default function NewChat({
                 <p>
                     Searching:
                 </p>
-                <div className="grid gap-y-1">
+                <div className="flex flex-col gap-y-1">
                     {searchOutputList?.map((item:any)=>{
                         return(
                             <SearchItem key={item.id} 
                             fromId={fromId}
+                            fromUsername={fromUsername}
                             searchUsername={item.username} 
                             searchId={item.id} 
                             setSelectedContact={setSelectedContact}
                             contactList={contactList}
-                            setContactList={setContactList}/>
+                            setContactList={setContactList}
+                            setSearchUsername={setSearchUsername}/>
                         )
                     })}
                 </div>
@@ -84,17 +88,24 @@ export default function NewChat({
 
 type searchItemType = {
     fromId:string,
+    fromUsername:string,
     searchUsername:string,
     searchId: string,
     setSelectedContact: Function,
     contactList:any[],
-    setContactList: Function
+    setContactList: Function,
+    setSearchUsername:Function
 }
 
-function SearchItem({fromId,searchUsername,searchId,setSelectedContact,contactList,setContactList}:searchItemType){
+function SearchItem({fromId,fromUsername,searchUsername,searchId,setSelectedContact,contactList,setContactList,setSearchUsername}:searchItemType){
     // const fromId = 
     const toId = searchId;
     const toUsername = searchUsername
+
+    const handleNewChat = async () => {
+        setSearchUsername('');
+        await addNewContact({fromId,fromUsername,toId,toUsername,contactList,setContactList,setSelectedContact})
+    }
 
     // const addNewContact = async() => {
         // await setSelectedContact(id)
@@ -114,8 +125,8 @@ function SearchItem({fromId,searchUsername,searchId,setSelectedContact,contactLi
             {searchUsername}
         </button> */}
 
-        <button className="text-start"
-            onClick={()=>{addNewContact({fromId,toId,toUsername,contactList,setContactList,setSelectedContact})}}>
+        <button className="text-start grow-0 hover:bg-green-900"
+            onClick={()=>{handleNewChat()}}>
                 {searchUsername}
         </button>
         </>

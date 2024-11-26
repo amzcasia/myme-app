@@ -133,6 +133,7 @@ export async function getContactList(){
 
 type addNewContactType = {
     fromId: string,
+    fromUsername:string,
     toId: string, 
     toUsername: string,
     contactList:any[],
@@ -140,7 +141,7 @@ type addNewContactType = {
     setSelectedContact: Function
 }
 
-export async function addNewContact({fromId, toId, toUsername, contactList, setContactList, setSelectedContact}:addNewContactType) {
+export async function addNewContact({fromId, fromUsername, toId, toUsername, contactList, setContactList, setSelectedContact}:addNewContactType) {
     console.log('addNewContact')
     console.log(`From: ${fromId}`)
     console.log(`To: ${toId}`)
@@ -159,8 +160,17 @@ export async function addNewContact({fromId, toId, toUsername, contactList, setC
             "to": `${toId}`,
             "toUsername": `${toUsername}`
         };
+        const contactDataPair = {
+            "from": `${toId}`,
+            "to": `${fromId}`,
+            "toUsername": `${fromUsername}`
+        };
         try{
             const record = await pb.collection('contacts').create(contactData);
+            if (fromId !== toId){
+                const recordPair = await pb.collection('contacts').create(contactDataPair);
+            }
+
             console.log("response after adding new contact:")
             console.log(record)
             const contactDataWithId = {
@@ -259,14 +269,19 @@ export async function realTimeMessageList({fromId,toId,chatList,setChatList}:rea
         console.log(`From: ${fromId}`)
         console.log(`To: ${toId}`)
         
-        await pb.collection('chats').unsubscribe('*');
+        await pb.collection('chats').unsubscribe('');
         await pb.collection('chats').subscribe('*', (e) => {
             if (
                 (e.record.from === fromId && e.record.to === toId) || 
                 (e.record.from === toId && e.record.to === fromId)
             ) {
                 if (e.record?.message){
-                    setChatList((prev:any[])=>[...prev, e.record])
+                    if (e.action == 'create'){
+                        setChatList((prev:any[])=>[...prev, e.record])
+                    }
+                    else if (e.action == 'delete'){
+                        setChatList((prev: any[]) => prev.slice(0, -1));
+                    }
                 }
                 console.log(e.record.message);
             }
@@ -311,26 +326,39 @@ export async function searchContactUsername({searchUsername}:searchIdentityType)
 
 type deleteContactType = {
     fromId:string,
-    toId: string
+    toId: string,
+    setSelectedContact:Function,
+    setSelectedContactUsername:Function
 }
 
-export async function deleteContact({fromId,toId}:deleteContactType) {
+export async function deleteContact({fromId,toId,setSelectedContact,setSelectedContactUsername}:deleteContactType) {
     //delete all messeges with toId ={toId}
     //delete contact from contactList
-    const toDelete = await pb.collection('contacts').getList(1, 50, {
-        filter: `from = "${fromId}" && to = "${toId}"`,
+    const toDeleteContacts = await pb.collection('contacts').getList(1, 999, {
+        filter: `from = "${fromId}" && to = "${toId}" || from = "${toId}" && to = "${fromId}"`,
       });
 
-    alert('Delete contact is still under development');
+    const toDeleteChats = await pb.collection('chats').getList(1, 999, {
+    filter: `from = "${fromId}" && to = "${toId}" || from = "${toId}" && to = "${fromId}"`,
+    });
+    // alert('Delete contact is still under development');
     try{
         // await pb.collection('contacts').delete('RECORD_ID');
-        console.log("test delete")
-        console.log(toDelete.items[0].id)
-
-        // for (const record of toDelete.items) {
-        //     await pb.collection('contacts').delete(record.id);
-        //   }
-
+        console.log("test delete");
+        console.log(toDeleteContacts.items);
+        console.log("test Delete Chats:");
+        console.log(toDeleteChats.items);
+        for (const record of toDeleteChats.items) {
+            console.log('indChat to delete:');
+            console.log(record.id);
+            console.log(record.message);
+            await pb.collection('chats').delete(record.id);
+        }
+        for (const record of toDeleteContacts.items) {
+            await pb.collection('contacts').delete(record.id);
+        }
+        setSelectedContactUsername(null);
+        setSelectedContact(null)
     }catch(error){
         console.error('function.tsx/deleteContact: Error deleting contact/chat',error)
     }

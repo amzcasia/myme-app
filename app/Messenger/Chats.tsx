@@ -8,6 +8,7 @@ type inputParamType = {
     chatList:any,
     setChatList:Function,
     selectedContact: string,
+    selectedContactUsername:string,
     setSelectedContact: Function,
 }
 
@@ -19,18 +20,18 @@ type messageInputType = {
     setAlignment: Function
 }
 
-export default function Chats( {chatList,setChatList,selectedContact,setSelectedContact}: inputParamType){
+export default function Chats( {chatList,setChatList,selectedContact,selectedContactUsername,setSelectedContact}: inputParamType){
     // const [chatList, setChatList] = useState<any>(null);
     const [alignment, setAlignment] = useState<string>('start');
     const {id} = getUserInfo();
     const fromId = id
     const toId = selectedContact
+    // const [selectedContactUsername, setSelectedContactUsername] = useState<string>('')
 
     return(
         <div className='m-2'>
             <div className='flex justify-between'>
-                
-                <p>{selectedContact}</p>
+                <p>{selectedContactUsername}</p>
                 <div>
                     {/* <Link href='/Messenger'>Back</Link> */}
                     <p>Chat Area</p>

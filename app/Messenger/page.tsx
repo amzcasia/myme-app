@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { pbLogout, getUserInfo, realTimeMessageList, getMessageList } from "@/utils/functions"
+import { pbLogout, getUserInfo, realTimeMessageList, getMessageList, getContactList } from "@/utils/functions"
 import Contacts from "./Contacts"
 import Chats from "./Chats"
 import React, { useState, useEffect } from "react"
@@ -15,6 +15,8 @@ export default function Messenger() {
     const [selectedContact, setSelectedContact] = useState<any>('null');
     const [chatList, setChatList] = useState<any>(null);
     const [contactList, setContactList] = useState<any>(null);
+    const [selectedContactUsername, setSelectedContactUsername] = useState<string>('')
+
     // const [toId, setToId] = useState<string>('');
 
     const fromId = id;
@@ -26,6 +28,8 @@ export default function Messenger() {
         console.log("ChatList")
         console.log(chatList)
         const fetchData = async () => {
+            const temp = await getContactList() ?? []
+            setContactList(temp)
             setChatList( await getMessageList({fromId,toId}));
             realTimeMessageList({fromId,toId,chatList,setChatList});
         };
@@ -43,6 +47,16 @@ export default function Messenger() {
                     <button onClick={pbLogout}>Logout</button>
                 </Link>
             </div>
+            <NewChat contactList={contactList}
+                setContactList = {setContactList}
+                selectedContact={selectedContact} 
+                setSelectedContact={setSelectedContact}
+                chatList={chatList}
+                setChatList={setChatList}
+                fromId={id}
+                fromUsername={username}>
+                
+            </NewChat>
             <Contacts 
                 contactList={contactList}
                 setContactList = {setContactList}
@@ -50,27 +64,29 @@ export default function Messenger() {
                 setSelectedContact={setSelectedContact}
                 chatList={chatList}
                 setChatList={setChatList}
-                fromId={id} >
-            </Contacts>
-            <NewChat contactList={contactList}
-                setContactList = {setContactList}
-                selectedContact={selectedContact} 
-                setSelectedContact={setSelectedContact}
-                chatList={chatList}
-                setChatList={setChatList}
-                fromId={id}>
-            </NewChat>
-            <Chats
-                chatList={chatList}
-                setChatList = {setChatList}
-                selectedContact={selectedContact} 
-                setSelectedContact={setSelectedContact}>
-            </Chats>
-            <MessageInput 
                 fromId={id}
-                selectedContact={selectedContact}
-                setChatList={setChatList} >
-            </MessageInput>
+                selectedContactUsername={selectedContactUsername}
+                setSelectedContactUsername={setSelectedContactUsername} >
+            </Contacts>
+            
+            <div>
+                {selectedContactUsername &&
+                <>
+                    <Chats
+                        chatList={chatList}
+                        setChatList = {setChatList}
+                        selectedContact={selectedContact} 
+                        setSelectedContact={setSelectedContact}
+                        selectedContactUsername={selectedContactUsername}>
+                    </Chats>
+                    <MessageInput 
+                        fromId={id}
+                        selectedContact={selectedContact}
+                        setChatList={setChatList} >
+                    </MessageInput>
+                </>}
+            </div>
+            
 
         </div>
     )
