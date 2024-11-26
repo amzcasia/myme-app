@@ -283,6 +283,7 @@ export async function realTimeMessageList({fromId,toId,chatList,setChatList}:rea
                         setChatList((prev: any[]) => prev.slice(0, -1));
                     }
                 }
+                
                 console.log(e.record.message);
             }
                 });
